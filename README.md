@@ -41,4 +41,3 @@ COMMANDS:
 
 - to set up pipeline for wcwhen
   > `fly -t {target} set-pipeline -c ci/pipeline.yml -p wcwhen`
-                                
