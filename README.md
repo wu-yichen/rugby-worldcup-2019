@@ -42,3 +42,5 @@ COMMANDS:
 - to set up pipeline for wcwhen
 
   > `fly -t {target} set-pipeline -c ci/pipeline.yml -p wcwhen`
+  
+- pipeline running on [hush house](https://hush-house.pivotal.io/teams/ywu/pipelines/wcwhen)
