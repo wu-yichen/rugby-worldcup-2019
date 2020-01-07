@@ -1,0 +1,78 @@
+jobs:
+  - name: test-and-build
+    plan:
+      - get: git-wcwhen
+        trigger: true
+      - task: test-and-build
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: yichen1987/ci
+              tag: latest
+          inputs:
+            - name: git-wcwhen
+          caches:
+            - path: go/pkg/mod
+          run:
+            path: bash
+            args:
+              - -c
+              - |
+                . git-wcwhen/ci/scripts/go_env.sh
+                cd git-wcwhen
+                make goimports
+                make lint
+                make test
+  - name: release
+    plan:
+      - get: git-wcwhen
+        passed: [test-and-build]
+        trigger: true
+      - task: release
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: yichen1987/ci
+              tag: latest
+          inputs:
+            - name: git-wcwhen
+          outputs:
+            - name: release
+              path: git-wcwhen/release
+          caches:
+            - path: go/pkg/mod
+          run:
+            path: bash
+            args:
+              - -c
+              - |
+                . git-wcwhen/ci/scripts/go_env.sh
+                cd git-wcwhen
+                mkdir -p release
+                echo "latest" > release/version
+                make release
+      - put: wcwhen-release-docker-image
+        params:
+          build: release
+          dockerfile: git-wcwhen/ci/image/pipeline_release/Dockerfile
+          tag_file: release/version
+        #file: git-wcwhen/ci/tasks/build.yml
+resources:
+  - name: git-wcwhen
+    type: git
+    source:
+      uri: https://github.com/wu-yichen/wcwhen.git
+      branch: master
+      ignore_paths:
+        - ci/**
+  - name: wcwhen-release-docker-image
+    type: docker-image
+    source:
+      username: ((docker-hub-username))
+      password: ((docker-hub-password))
+      repository: ((docker-hub-repository))
+      
