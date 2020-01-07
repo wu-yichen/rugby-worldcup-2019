@@ -65,7 +65,7 @@ resources:
   - name: git-wcwhen
     type: git
     source:
-      uri: https://github.com/wu-yichen/wcwhen.git
+      uri: https://github.com/wu-yichen/rugby-worldcup-2019.git
       branch: master
       ignore_paths:
         - ci/**
