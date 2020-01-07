@@ -72,7 +72,7 @@ resources:
   - name: wcwhen-release-docker-image
     type: docker-image
     source:
-      username: ((docker-hub-username))
-      password: ((docker-hub-password))
-      repository: ((docker-hub-repository))
+      username: ((docker-hub/Username))
+      password: ((docker-hub/Password))
+      repository: ((docker-hub/Notes/repository))
       
